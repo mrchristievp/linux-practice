@@ -8,3 +8,11 @@
 .command-shortcuts{margin-bottom:18px}.command-shortcuts h2{font-size:15px;margin:0}.command-shortcuts p{font-size:12px;margin:6px 0 12px}.command-shortcuts .reference-strip{margin:0}
 
 .quiz-reference-entry{padding:12px 0;border-bottom:1px solid var(--line)}.quiz-reference-entry:last-child{border-bottom:0}.quiz-reference-entry pre{margin:0;font-weight:600;overflow-wrap:anywhere}.quiz-reference-entry p{margin:4px 0 0}
+
+/* Task-specific lessons and separate example workspaces. */
+.lesson-card .lesson-points{padding-left:20px;margin:14px 0 22px;font-size:14px;line-height:1.65;color:#565c68}.lesson-points li+li{margin-top:10px}
+.worked-example{border-top:1px solid var(--line);padding-top:20px}.worked-example h3{font-size:16px;line-height:1.5;margin:9px 0}.worked-example .example-intro{font-size:12px;line-height:1.6}
+.example-steps{padding-left:22px;margin:18px 0}.example-steps li{padding-left:3px;margin-bottom:20px}.example-steps li::marker{font-size:12px;font-weight:700;color:var(--pink-dark)}.example-steps pre{padding:10px 12px;background:#f6f6f3;border-radius:5px;overflow-wrap:anywhere;font-size:12px;line-height:1.7;margin:0}.example-steps p{font-size:12px;line-height:1.6;margin:7px 0}.example-steps button{font-size:11px;padding:5px 9px}
+.lesson-next{border-top:1px solid var(--line);padding-top:18px}.lesson-next p{font-size:12px;line-height:1.6}.lesson-next button{font-size:12px}.left-column>.tasks{margin-top:18px}
+.lab-modes{display:flex;gap:8px;margin-bottom:15px}.lab-modes button{flex:1;font-size:13px}.lab-modes button.active{background:#fff0f5;color:var(--pink-dark);border-color:#e91d6380}
+@media(max-width:1150px){.left-column{display:block}.lesson-card{border:1px solid var(--line)}.lesson-card .card-pad{padding:22px}.left-column>.tasks{margin:16px 0 22px}}

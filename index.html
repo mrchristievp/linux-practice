@@ -9,8 +9,16 @@
 .command-shortcuts{margin-bottom:18px}.command-shortcuts h2{font-size:15px;margin:0}.command-shortcuts p{font-size:12px;margin:6px 0 12px}.command-shortcuts .reference-strip{margin:0}
 
 .quiz-reference-entry{padding:12px 0;border-bottom:1px solid var(--line)}.quiz-reference-entry:last-child{border-bottom:0}.quiz-reference-entry pre{margin:0;font-weight:600;overflow-wrap:anywhere}.quiz-reference-entry p{margin:4px 0 0}
+
+/* Task-specific lessons and separate example workspaces. */
+.lesson-card .lesson-points{padding-left:20px;margin:14px 0 22px;font-size:14px;line-height:1.65;color:#565c68}.lesson-points li+li{margin-top:10px}
+.worked-example{border-top:1px solid var(--line);padding-top:20px}.worked-example h3{font-size:16px;line-height:1.5;margin:9px 0}.worked-example .example-intro{font-size:12px;line-height:1.6}
+.example-steps{padding-left:22px;margin:18px 0}.example-steps li{padding-left:3px;margin-bottom:20px}.example-steps li::marker{font-size:12px;font-weight:700;color:var(--pink-dark)}.example-steps pre{padding:10px 12px;background:#f6f6f3;border-radius:5px;overflow-wrap:anywhere;font-size:12px;line-height:1.7;margin:0}.example-steps p{font-size:12px;line-height:1.6;margin:7px 0}.example-steps button{font-size:11px;padding:5px 9px}
+.lesson-next{border-top:1px solid var(--line);padding-top:18px}.lesson-next p{font-size:12px;line-height:1.6}.lesson-next button{font-size:12px}.left-column>.tasks{margin-top:18px}
+.lab-modes{display:flex;gap:8px;margin-bottom:15px}.lab-modes button{flex:1;font-size:13px}.lab-modes button.active{background:#fff0f5;color:var(--pink-dark);border-color:#e91d6380}
+@media(max-width:1150px){.left-column{display:block}.lesson-card{border:1px solid var(--line)}.lesson-card .card-pad{padding:22px}.left-column>.tasks{margin:16px 0 22px}}
 </style></head>
-<body><a class="skip" href="#main">Skip to practice</a><header><div class="brand"><span class="brand-icon" aria-hidden="true">&gt;_</span><div><small>AP CYBERSECURITY</small>Linux Practice</div></div><nav class="topnav" aria-label="Practice areas"><button data-view="labs">Skills labs</button><button data-view="quiz">Practice questions</button><button data-view="sandbox">Free terminal</button><button data-view="reference">Reference</button></nav><span class="draft">V2</span></header><div class="layout"><aside id="sidebar"></aside><main class="workspace" id="main" tabindex="-1"></main></div><div id="terminal-announcement" class="sr-only" aria-live="polite"></div><div id="toast" role="status" hidden></div><input type="file" id="import-file" accept="application/json,.json" hidden><dialog id="editor" aria-labelledby="editor-title"><h2 id="editor-title">Practice text editor</h2><p id="editor-path"></p><textarea id="editor-text" aria-label="File contents" spellcheck="false"></textarea><p id="editor-message"></p><div class="row"><button class="primary" id="save-editor">Save file</button><button id="close-editor">Cancel</button></div></dialog><dialog id="reference-dialog" aria-labelledby="reference-title"><h2 id="reference-title"></h2><pre id="reference-text"></pre><button id="close-reference">Close reference</button></dialog><script>const HOME='/home/student';
+<body><a class="skip" href="#main">Skip to practice</a><header><div class="brand"><span class="brand-icon" aria-hidden="true">&gt;_</span><div><small>AP CYBERSECURITY</small>Linux Practice</div></div><nav class="topnav" aria-label="Practice areas"><button data-view="labs">Skills labs</button><button data-view="quiz">Practice questions</button><button data-view="sandbox">Free terminal</button><button data-view="reference">Reference</button></nav><span class="draft">V3</span></header><div class="layout"><aside id="sidebar"></aside><main class="workspace" id="main" tabindex="-1"></main></div><div id="terminal-announcement" class="sr-only" aria-live="polite"></div><div id="toast" role="status" hidden></div><input type="file" id="import-file" accept="application/json,.json" hidden><dialog id="editor" aria-labelledby="editor-title"><h2 id="editor-title">Practice text editor</h2><p id="editor-path"></p><textarea id="editor-text" aria-label="File contents" spellcheck="false"></textarea><p id="editor-message"></p><div class="row"><button class="primary" id="save-editor">Save file</button><button id="close-editor">Cancel</button></div></dialog><dialog id="reference-dialog" aria-labelledby="reference-title"><h2 id="reference-title"></h2><pre id="reference-text"></pre><button id="close-reference">Close reference</button></dialog><script>const HOME='/home/student';
 const MAN={
  pwd:'pwd\nPrint the current working directory.',ls:'ls [-aAl] [path]\nList entries. -a includes hidden entries and . and ..; -A omits . and ..; -l shows permissions and ownership.',cd:'cd [path]\nChange directory. No argument returns home. / is root, ~ is home, .. is the parent.',
  whoami:'whoami\nPrint the current username.',hostname:'hostname\nPrint the practice computer name.',mkdir:'mkdir [-p] directory...\nCreate directories. -p creates missing parent directories.',touch:'touch file...\nCreate an empty file if missing. Existing contents remain unchanged.',
@@ -127,6 +135,602 @@ const TOPICS=[
  task('scriptmode','Set executable permissions','Create an empty practice/run.sh file. Give its owner read/write/execute, its group read/execute, and others no access.','Use mode 750. The .sh extension alone does not set permissions or make this terminal execute scripts.','touch practice/run.sh; chmod 750 practice/run.sh',s=>exists(s,'practice/run.sh')&&s.fs[HOME+'/practice/run.sh'].mode===0o750)
  ]}
 ];
+
+const LESSONS={
+  "identity": {
+    "title": "Read the terminal prompt",
+    "points": [
+      "The prompt identifies the user, computer, and current folder.",
+      "whoami prints the user; hostname prints the computer name; pwd prints the current folder.",
+      "Type commands after the $ prompt. Do not type the $ itself."
+    ],
+    "goal": "Identify the current user and folder.",
+    "steps": [
+      {
+        "command": "whoami",
+        "why": "Read the username returned by the terminal."
+      },
+      {
+        "command": "pwd",
+        "why": "Read the full path of the current folder."
+      }
+    ]
+  },
+  "help": {
+    "title": "Ask a command for help",
+    "points": [
+      "man takes a command name as its argument.",
+      "A manual explains what the command does and which options it accepts."
+    ],
+    "goal": "Read about pwd, then use it.",
+    "steps": [
+      {
+        "command": "man pwd",
+        "why": "Look up the command before trying it."
+      },
+      {
+        "command": "pwd",
+        "why": "Use the command to display your current folder."
+      }
+    ]
+  },
+  "commandparts": {
+    "title": "Command, option, path",
+    "points": [
+      "A command names the action. An option changes its behavior.",
+      "In ls -l downloads, ls is the command, -l is the option, and downloads is the path."
+    ],
+    "goal": "Inspect downloads using a detailed listing.",
+    "steps": [
+      {
+        "command": "ls downloads",
+        "why": "List just the entry names."
+      },
+      {
+        "command": "ls -l downloads",
+        "why": "Compare the long listing: permissions, owner, size, and name."
+      }
+    ]
+  },
+  "returnhome": {
+    "title": "Return to your home folder",
+    "points": [
+      "cd changes the current directory.",
+      "cd with no argument, or cd ~, returns to your home directory.",
+      "Use pwd to confirm where you ended up."
+    ],
+    "goal": "Visit /etc, then return home.",
+    "steps": [
+      {
+        "command": "cd /etc",
+        "why": "Move to an absolute path outside your home folder."
+      },
+      {
+        "command": "cd ~",
+        "why": "Use ~ as a shortcut to your home folder."
+      },
+      {
+        "command": "pwd",
+        "why": "Verify that you are back in /home/student."
+      }
+    ]
+  },
+  "locate": {
+    "title": "Locate a file, then read it",
+    "points": [
+      "find searches for file paths; cat displays a file’s text.",
+      "After finding a file, pass its full or relative path to cat."
+    ],
+    "goal": "Find agenda.txt in the example folders and read it.",
+    "steps": [
+      {
+        "command": "find examples -name agenda.txt",
+        "why": "Search the example folders for this exact filename."
+      },
+      {
+        "command": "cat examples/club/agenda.txt",
+        "why": "Read the file at the path returned by find."
+      }
+    ]
+  },
+  "relative": {
+    "title": "Navigate with relative paths",
+    "points": [
+      "A relative path starts from your current directory.",
+      "A path can contain several folders separated by /.",
+      "Use pwd to check the resulting full path."
+    ],
+    "goal": "Enter examples/club from your home folder.",
+    "steps": [
+      {
+        "command": "cd examples/club",
+        "why": "Follow two folders using a relative path."
+      },
+      {
+        "command": "pwd",
+        "why": "The full path should end with /examples/club."
+      }
+    ]
+  },
+  "hidden": {
+    "title": "Reveal hidden filenames",
+    "points": [
+      "Names beginning with a dot are normally hidden by ls.",
+      "ls -a includes hidden entries. The dot is part of the filename."
+    ],
+    "goal": "Find and read the hidden tip inside examples.",
+    "steps": [
+      {
+        "command": "ls examples",
+        "why": "Look at the visible entries first."
+      },
+      {
+        "command": "ls -a examples",
+        "why": "Notice the extra .tip.txt entry."
+      },
+      {
+        "command": "cat examples/.tip.txt",
+        "why": "Include the leading dot when reading the file."
+      }
+    ]
+  },
+  "parent": {
+    "title": "Move to the parent folder",
+    "points": [
+      ".. means the parent of your current folder.",
+      ". means the current folder. Neither is a normal filename."
+    ],
+    "goal": "Move from examples/club to examples.",
+    "steps": [
+      {
+        "command": "cd examples/club",
+        "why": "Start two levels below your home folder."
+      },
+      {
+        "command": "cd ..",
+        "why": "Move up exactly one level."
+      },
+      {
+        "command": "pwd",
+        "why": "Check that the path now ends with /examples."
+      }
+    ]
+  },
+  "create": {
+    "title": "Create a folder and a file",
+    "points": [
+      "mkdir creates a folder. touch creates an empty file if it is missing.",
+      "Create the parent folder before creating a file inside it."
+    ],
+    "goal": "Create an example folder containing an empty checklist.",
+    "steps": [
+      {
+        "command": "mkdir examples/project",
+        "why": "Create the parent folder."
+      },
+      {
+        "command": "touch examples/project/checklist.txt",
+        "why": "Create a file inside that folder."
+      },
+      {
+        "command": "ls examples/project",
+        "why": "Verify that the file exists."
+      }
+    ]
+  },
+  "backup": {
+    "title": "Copy while keeping the original",
+    "points": [
+      "cp takes a source path and a destination path.",
+      "A destination can include a new filename. Copying leaves the source in place."
+    ],
+    "goal": "Make a renamed copy of the example club notes.",
+    "steps": [
+      {
+        "command": "mkdir examples/archive",
+        "why": "Create a destination folder."
+      },
+      {
+        "command": "cp examples/club/notes.txt examples/archive/club-copy.txt",
+        "why": "Copy the text and give the copy a new name."
+      },
+      {
+        "command": "ls examples/club; ls examples/archive",
+        "why": "Check that both the original and copy exist."
+      }
+    ]
+  },
+  "move": {
+    "title": "Move and rename with mv",
+    "points": [
+      "mv takes a source and destination, just like cp.",
+      "Moving removes the source entry. A new destination filename also renames it."
+    ],
+    "goal": "Move the example color file into the club folder with a new name.",
+    "steps": [
+      {
+        "command": "mv examples/colors.txt examples/club/swatches.txt",
+        "why": "Move and rename the file in one command."
+      },
+      {
+        "command": "ls examples; ls examples/club",
+        "why": "Check that only the destination contains the moved file."
+      }
+    ]
+  },
+  "cleanup": {
+    "title": "Inspect a copy before deleting it",
+    "points": [
+      "Use cp to make a working copy without changing the original.",
+      "Use cat to inspect it, then rm to remove only the copy."
+    ],
+    "goal": "Create, inspect, and remove a scratch copy of the example agenda.",
+    "steps": [
+      {
+        "command": "cp examples/club/agenda.txt examples/scratch.txt",
+        "why": "Make a temporary working copy."
+      },
+      {
+        "command": "cat examples/scratch.txt",
+        "why": "Confirm that this is the copy you intended to remove."
+      },
+      {
+        "command": "rm examples/scratch.txt",
+        "why": "Remove the scratch copy; the agenda remains in club."
+      }
+    ]
+  },
+  "firstlines": {
+    "title": "Read the beginning of a file",
+    "points": [
+      "head shows the beginning of a file.",
+      "-n chooses the number of lines; without it, head shows ten."
+    ],
+    "goal": "Display the first three lines of the example club notes.",
+    "steps": [
+      {
+        "command": "cat examples/club/notes.txt",
+        "why": "Look at the whole file for comparison."
+      },
+      {
+        "command": "head -n 3 examples/club/notes.txt",
+        "why": "Limit the output to the first three lines."
+      }
+    ]
+  },
+  "lastlines": {
+    "title": "Read the end of a file",
+    "points": [
+      "tail shows the end of a file.",
+      "-n selects how many final lines to display."
+    ],
+    "goal": "Read the last three lines of the example club agenda.",
+    "steps": [
+      {
+        "command": "tail -n 3 examples/club/agenda.txt",
+        "why": "Read from the end instead of the beginning."
+      },
+      {
+        "command": "wc -l examples/club/agenda.txt",
+        "why": "Count the file’s total lines for comparison."
+      }
+    ]
+  },
+  "write": {
+    "title": "Write one line to a file",
+    "points": [
+      "echo prints the text you give it.",
+      "> sends that output into a file, replacing any previous contents.",
+      "Quote text containing spaces so it stays together."
+    ],
+    "goal": "Write a short example reminder and inspect it.",
+    "steps": [
+      {
+        "command": "echo \"Bring your notebook.\" > examples/reminder.txt",
+        "why": "Create a file containing one line."
+      },
+      {
+        "command": "cat examples/reminder.txt",
+        "why": "Check the exact text you saved."
+      }
+    ]
+  },
+  "append": {
+    "title": "Append without erasing",
+    "points": [
+      "> creates or replaces a file’s contents.",
+      ">> adds new output at the end, preserving existing text."
+    ],
+    "goal": "Create an example list containing Red and Blue on separate lines.",
+    "steps": [
+      {
+        "command": "echo Red > examples/list.txt",
+        "why": "Start a new file with the first line."
+      },
+      {
+        "command": "echo Blue >> examples/list.txt",
+        "why": "Append the second line instead of replacing the first."
+      },
+      {
+        "command": "cat examples/list.txt",
+        "why": "Verify that both lines are still present."
+      }
+    ]
+  },
+  "findtxt": {
+    "title": "Find files by name",
+    "points": [
+      "find searches folder paths, not the text inside files.",
+      "-name selects filenames matching a pattern. * means any sequence of characters.",
+      "Quote wildcard patterns so the pattern reaches find as intended."
+    ],
+    "goal": "Find .log files under the example folder.",
+    "steps": [
+      {
+        "command": "find examples -name \"*.log\"",
+        "why": "Search all example subfolders for names ending in .log."
+      }
+    ]
+  },
+  "matching": {
+    "title": "Select and save matching lines",
+    "points": [
+      "grep selects lines containing a pattern.",
+      "Match capitalization exactly unless you use -i.",
+      "Add > and a filename to save the selected lines."
+    ],
+    "goal": "Save the example agenda line containing Tuesday.",
+    "steps": [
+      {
+        "command": "grep Tuesday examples/club/agenda.txt",
+        "why": "Preview the matching line before saving it."
+      },
+      {
+        "command": "grep Tuesday examples/club/agenda.txt > examples/tuesday.txt",
+        "why": "Save that line into a new file."
+      },
+      {
+        "command": "cat examples/tuesday.txt",
+        "why": "Read the saved result."
+      }
+    ]
+  },
+  "case": {
+    "title": "Search regardless of capitalization",
+    "points": [
+      "grep is case sensitive by default.",
+      "-i treats uppercase and lowercase letters as equivalent."
+    ],
+    "goal": "Save every example line containing shell in any capitalization.",
+    "steps": [
+      {
+        "command": "grep shell examples/words.txt",
+        "why": "Notice that this matches only lowercase shell."
+      },
+      {
+        "command": "grep -i shell examples/words.txt > examples/shell-lines.txt",
+        "why": "Include Shell as well as shell and save the result."
+      },
+      {
+        "command": "cat examples/shell-lines.txt",
+        "why": "Verify that both matching lines were saved."
+      }
+    ]
+  },
+  "count": {
+    "title": "Count matching lines",
+    "points": [
+      "grep -c returns a count instead of the matching text.",
+      "The count is matching lines, even if a word occurs twice on one line."
+    ],
+    "goal": "Count example log lines containing CLOSE and save the number.",
+    "steps": [
+      {
+        "command": "grep -n CLOSE examples/visits.log",
+        "why": "Preview the matching lines with their line numbers."
+      },
+      {
+        "command": "grep -c CLOSE examples/visits.log > examples/close-count.txt",
+        "why": "Save just the count, not the log text."
+      },
+      {
+        "command": "cat examples/close-count.txt",
+        "why": "The example file contains one matching line."
+      }
+    ]
+  },
+  "pipeline": {
+    "title": "Connect two filters with a pipe",
+    "points": [
+      "A pipe (|) passes the first command’s output to the next command.",
+      "Two grep filters keep only lines matching both patterns.",
+      "Put a redirect at the end to save the final result."
+    ],
+    "goal": "Save example log entries containing both OPEN and office.",
+    "steps": [
+      {
+        "command": "grep OPEN examples/visits.log | grep office",
+        "why": "Filter by status first, then by location."
+      },
+      {
+        "command": "grep OPEN examples/visits.log | grep office > examples/office-open.txt",
+        "why": "Save only the result of both filters."
+      }
+    ]
+  },
+  "organize": {
+    "title": "Build an organized working folder",
+    "points": [
+      "Break a multi-step goal into smaller changes.",
+      "Create the folder, copy a source file, then add any empty files.",
+      "Check the finished folder with ls."
+    ],
+    "goal": "Make an example meeting folder with a copied agenda and an empty list.",
+    "steps": [
+      {
+        "command": "mkdir examples/meeting",
+        "why": "Create the destination."
+      },
+      {
+        "command": "cp examples/club/agenda.txt examples/meeting/plan.txt",
+        "why": "Copy and rename the agenda."
+      },
+      {
+        "command": "touch examples/meeting/attendees.txt",
+        "why": "Create a separate empty file."
+      },
+      {
+        "command": "ls examples/meeting",
+        "why": "Check the two filenames."
+      }
+    ]
+  },
+  "extract": {
+    "title": "Save part of a file",
+    "points": [
+      "head can select a file’s first lines.",
+      "Redirect the selected output, then use cat to verify the new file."
+    ],
+    "goal": "Save and display the first two example club-note lines.",
+    "steps": [
+      {
+        "command": "head -n 2 examples/club/notes.txt > examples/short-notes.txt",
+        "why": "Create a shorter file without changing the original."
+      },
+      {
+        "command": "cat examples/short-notes.txt",
+        "why": "Verify the saved result, rather than only the source."
+      }
+    ]
+  },
+  "independent": {
+    "title": "Combine familiar skills",
+    "points": [
+      "Plan the result before choosing commands.",
+      "Use mkdir for a destination, cp for an unchanged copy, and grep for selected text.",
+      "Preserve originals when the goal asks for copies."
+    ],
+    "goal": "Create an example handout folder with club notes and only Art agenda lines.",
+    "steps": [
+      {
+        "command": "mkdir examples/handouts",
+        "why": "Prepare the destination folder."
+      },
+      {
+        "command": "cp examples/club/notes.txt examples/handouts/tips.txt",
+        "why": "Copy the notes with a new filename."
+      },
+      {
+        "command": "grep Art examples/club/agenda.txt > examples/handouts/art-days.txt",
+        "why": "Make a second file containing only the selected agenda lines."
+      },
+      {
+        "command": "ls examples/handouts",
+        "why": "Verify that both files are present."
+      }
+    ]
+  },
+  "private": {
+    "title": "Read the three permission groups",
+    "points": [
+      "Permissions describe the owner, group, and others, in that order.",
+      "For each group, read = 4, write = 2, and execute = 1. Add the values.",
+      "chmod changes access; ls -l lets you inspect it."
+    ],
+    "goal": "Give only the owner read access to an example note.",
+    "steps": [
+      {
+        "command": "chmod 400 examples/club/notes.txt",
+        "why": "4 gives the owner read access; both 0 digits remove all other access."
+      },
+      {
+        "command": "ls -l examples/club/notes.txt",
+        "why": "Expect -r-------- for the example file."
+      }
+    ]
+  },
+  "groupread": {
+    "title": "Choose a mode for each group",
+    "points": [
+      "Each digit controls one group: owner, group, then others.",
+      "6 = read + write; 4 = read only; 0 = no access.",
+      "A read-only owner can have a different mode from the group."
+    ],
+    "goal": "Give the example note read access for owner and group only.",
+    "steps": [
+      {
+        "command": "chmod 440 examples/club/notes.txt",
+        "why": "Set owner read, group read, and no access for others."
+      },
+      {
+        "command": "ls -l examples/club/notes.txt",
+        "why": "Expect -r--r----- for the example file."
+      }
+    ]
+  },
+  "readonly": {
+    "title": "Protect a copy from changes",
+    "points": [
+      "Copy first so permission changes apply only to the working copy.",
+      "A mode with no write bit prevents writing through this practice terminal.",
+      "Read and execute are separate permissions."
+    ],
+    "goal": "Make an example agenda copy readable only by its owner.",
+    "steps": [
+      {
+        "command": "cp examples/club/agenda.txt examples/agenda-copy.txt",
+        "why": "Keep the source unchanged."
+      },
+      {
+        "command": "chmod 400 examples/agenda-copy.txt",
+        "why": "Give the owner read access, with no write or execute bits."
+      },
+      {
+        "command": "ls -l examples/agenda-copy.txt",
+        "why": "Inspect the new copy’s mode."
+      }
+    ]
+  },
+  "scriptmode": {
+    "title": "Set the execute bit deliberately",
+    "points": [
+      "Execute = 1. Read + execute = 5; read + write + execute = 7.",
+      "A .sh filename does not itself grant execute permission.",
+      "This practice terminal changes permission bits but does not run scripts."
+    ],
+    "goal": "Create an example script file that only its owner can read and execute.",
+    "steps": [
+      {
+        "command": "touch examples/check.sh",
+        "why": "Create the empty file first."
+      },
+      {
+        "command": "chmod 500 examples/check.sh",
+        "why": "Set owner read/execute and no access for anyone else."
+      },
+      {
+        "command": "ls -l examples/check.sh",
+        "why": "Expect -r-x------ for the example file."
+      }
+    ]
+  }
+};
+function prepareExampleShell(snapshot){
+ if(snapshot)return prepareShell(snapshot);
+ const s=prepareShell();
+ for(const path of ['examples','examples/club'])s.fs[HOME+'/'+path]={type:'d',mode:0o755,owner:'student'};
+ const files={
+ 'examples/club/agenda.txt':'Monday: Robotics\nTuesday: Art\nWednesday: Robotics\nThursday: Music\nFriday: Art\n',
+ 'examples/club/notes.txt':'Arrive on time.\nBring a notebook.\nWork in pairs.\nSave your changes.\n',
+ 'examples/visits.log':'09:00 OPEN lab\n09:05 CLOSE lab\n09:10 OPEN office\n09:15 OPEN lab\n',
+ 'examples/words.txt':'Shell tools work with text.\nshell commands take arguments.\nRead a file before changing it.\n',
+ 'examples/.tip.txt':'A dot at the beginning hides a filename.\n',
+ 'examples/colors.txt':'orange\npurple\nteal\n'
+ };
+ for(const [path,text]of Object.entries(files))s.fs[HOME+'/'+path]={type:'f',text,mode:0o644,owner:'student'};
+ return s;
+}
+
 function prepareShell(snapshot){const s=new Shell(snapshot);const original=new Shell();s.initialNotes=original.fs[HOME+'/documents/course/notes.txt'].text;s.initialSchedule=original.fs[HOME+'/documents/course/schedule.txt'].text;return s;}
 const recall=(topic,prompt,answers,explanation)=>({topic,type:'recall',prompt,answers,explanation});
 const command=(topic,prompt,answer,explanation)=>({topic,type:'command',prompt,answer,explanation});
@@ -183,6 +787,7 @@ function evaluateQuestion(q,answer){
 
 
 const $=s=>document.querySelector(s), KEY='viewpoint-linux-practice-v1';
+let labMode='example';
 let storageOK=true,state={version:1,completed:{},snapshots:{},transcripts:{},quizHistory:[],view:'labs',topic:'basics',task:'identity'},quiz=null,shell,context,historyIndex=0,feedback=null,hintLevel=0;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved?.version===1)state={...state,...saved};}catch{storageOK=false;}
 if(!TOPICS.some(t=>t.id===state.topic))state.topic='basics';if(!TOPICS.some(t=>t.tasks.some(x=>x.id===state.task)))state.task='identity';
@@ -193,21 +798,44 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=tr
 function toast(text){const n=$('#toast');n.textContent=text;n.hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>n.hidden=true,4500);}
 const topic=()=>TOPICS.find(t=>t.id===state.topic)||TOPICS[0];
 const currentTask=()=>topic().tasks.find(t=>t.id===state.task)||topic().tasks[0];
-function loadShell(key){context=key;shell=prepareShell(state.snapshots[key]);historyIndex=shell.history.length;}
+function loadShell(key){context=key;shell=key.startsWith('example:')?prepareExampleShell(state.snapshots[key]):prepareShell(state.snapshots[key]);historyIndex=shell.history.length;}
 function keepShell(){shell.history=shell.history.slice(-500);shell.events=shell.events.slice(-500);state.snapshots[context]=shell.snapshot();save();}
 function progress(){return Object.keys(state.completed).filter(id=>TOPICS.some(t=>t.tasks.some(x=>x.id===id))).length;}
-function renderSidebar(){const aside=$('#sidebar');aside.replaceChildren();aside.append(el('div','eyebrow','Practice pathway'));const list=el('nav','module-list');list.setAttribute('aria-label','Skill modules');for(const t of TOPICS){const count=t.tasks.filter(x=>state.completed[x.id]).length;const b=button('',()=>{state.view='labs';state.topic=t.id;state.task=t.tasks.find(x=>!state.completed[x.id])?.id||t.tasks[0].id;feedback=null;hintLevel=0;render();});b.className='module'+(state.view==='labs'&&t.id===state.topic?' active':'')+(count===t.tasks.length?' done':'');append(b,el('span','num',count===t.tasks.length?'✓':t.short),el('span','',t.label),el('span','count',`${count}/${t.tasks.length}`));if(state.view==='labs'&&t.id===state.topic)b.setAttribute('aria-current','page');list.append(b);}aside.append(list);
+function renderSidebar(){const aside=$('#sidebar');aside.replaceChildren();aside.append(el('div','eyebrow','Practice pathway'));const list=el('nav','module-list');list.setAttribute('aria-label','Skill modules');for(const t of TOPICS){const count=t.tasks.filter(x=>state.completed[x.id]).length;const b=button('',()=>{state.view='labs';state.topic=t.id;state.task=t.tasks.find(x=>!state.completed[x.id])?.id||t.tasks[0].id;labMode='example';feedback=null;hintLevel=0;render();});b.className='module'+(state.view==='labs'&&t.id===state.topic?' active':'')+(count===t.tasks.length?' done':'');append(b,el('span','num',count===t.tasks.length?'✓':t.short),el('span','',t.label),el('span','count',`${count}/${t.tasks.length}`));if(state.view==='labs'&&t.id===state.topic)b.setAttribute('aria-current','page');list.append(b);}aside.append(list);
 const bottom=el('div','sidebar-bottom');append(bottom,el('div','eyebrow','Your progress'),el('p','',`${progress()} of 28 lab tasks complete`));const track=el('div','progress-track'),fill=el('span');fill.style.width=progress()/28*100+'%';track.append(fill);bottom.append(track);append(bottom,button('Export progress',exportProgress),button('Import',()=>$('#import-file').click()));const status=el('p','storage-status');status.id='storage-status';status.textContent=storageOK?'Saved in this browser':'Browser saving unavailable. Export progress to keep your work.';bottom.append(status);aside.append(bottom);}
 function heading(title,desc,tag=''){const h=el('div','heading'),text=el('div');append(text,el('div','eyebrow','Linux skills / AP Cybersecurity'),el('h1','',title),el('p','',desc));h.append(text);if(tag)h.append(el('span','unit-tag',tag));return h;}
 function render(){save();renderSidebar();document.querySelectorAll('[data-view]').forEach(b=>{const active=b.dataset.view===state.view;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});const main=$('#main');main.replaceChildren();if(state.view==='labs')renderLabs(main);else if(state.view==='quiz')renderQuiz(main);else if(state.view==='reference')renderReference(main);else renderSandbox(main);}
-function renderLabs(main){const t=topic(),task=currentTask();state.task=task.id;loadShell(task.id);main.append(heading(t.label,t.desc,`${t.short} / 07`));const grid=el('div','labgrid'),left=el('div','left-column'),lesson=el('section','card lesson-card'),lp=el('div','card-pad');append(lp,el('div','eyebrow','Quick lesson'),el('h2','',t.label),el('p','',t.lesson));const sample=el('div','sample');append(sample,el('div','eyebrow','Try an example'),el('pre','',t.example));lp.append(sample);lesson.append(lp);left.append(lesson);const tasks=el('div','card tasks');for(const [i,x]of t.tasks.entries()){const b=button('',()=>{state.task=x.id;feedback=null;hintLevel=0;render();});b.className='taskbutton'+(x.id===task.id?' selected':'');append(b,el('span','task-dot'+(state.completed[x.id]?' complete':''),state.completed[x.id]?'✓':i+1),el('span','',x.title));if(x.id===task.id)b.setAttribute('aria-current','step');tasks.append(b);}left.append(tasks);grid.append(left);
-const right=el('div'),detail=el('section','card task-detail'),pad=el('div','card-pad');append(pad,el('div','eyebrow',`Task ${t.tasks.indexOf(task)+1} of ${t.tasks.length}`),el('h2','',task.title),el('p','',task.goal));const row=el('div','row');append(row,button('Check my work',()=>checkTask(task),'primary'),button('Hint',()=>{hintLevel++;drawHints(task);}),button('Reset task',()=>resetTask(task.id),'quiet'));pad.append(row);const hints=el('div','hint');hints.id='task-hints';pad.append(hints);const fb=el('div');fb.id='task-feedback';fb.setAttribute('aria-live','polite');pad.append(fb);detail.append(pad);right.append(detail);
-const shortcuts=el('section','card card-pad command-shortcuts');shortcuts.setAttribute('aria-label','Command reference shortcuts');append(shortcuts,el('h2','','Command reference shortcuts'),el('p','','Select a command to see what it does, its syntax, and examples.'));const refs=el('div','reference-strip');for(const c of t.terms)refs.append(button(c,()=>openReference(c)));shortcuts.append(refs);right.append(shortcuts);right.append(terminal());right.append(el('p','bottomnote','A supported-command practice terminal. It changes only the files inside this exercise. Each task starts with the same sample files.'));grid.append(right);main.append(grid);drawHints(task);if(feedback)drawTaskFeedback(task);}
+function switchLabMode(mode){labMode=mode;feedback=null;hintLevel=0;render();}
+function renderLesson(task){
+ const lesson=LESSONS[task.id],card=el('section','card lesson-card'),pad=el('div','card-pad');
+ append(pad,el('div','eyebrow','1 · Learn the skill'),el('h2','',lesson.title));
+ const points=el('ul','lesson-points');for(const point of lesson.points)points.append(el('li','',point));pad.append(points);
+ const example=el('section','worked-example');append(example,el('div','eyebrow','2 · Try an example'),el('h3','',lesson.goal),el('p','example-intro','Try one command at a time. Each button puts a command in the example terminal; press Run to execute it.'));
+ const steps=el('ol','example-steps');for(const [i,step]of lesson.steps.entries()){
+ const item=el('li'),use=button('Use command',()=>{if(labMode!=='example')switchLabMode('example');const input=$('#command-input');input.value=step.command;input.focus();});use.setAttribute('aria-label',`Use example command ${i+1}: ${step.command}`);
+ append(item,el('pre','',step.command),el('p','',step.why),use);steps.append(item);
+ }
+ example.append(steps);pad.append(example);
+ const next=el('div','lesson-next');append(next,el('div','eyebrow','3 · Solve a new problem'),el('p','','Use the same skill with different files, values, or steps. The practice solution stays hidden until you ask for it.'),button('Start practice →',()=>switchLabMode('practice'),'primary'));pad.append(next);card.append(pad);return card;
+}
+function renderLabs(main){
+ const t=topic(),task=currentTask(),isExample=labMode==='example';state.task=task.id;loadShell(isExample?'example:'+task.id:task.id);
+ main.append(heading(t.label,t.desc,`${t.short} / 07`));const grid=el('div','labgrid'),left=el('div','left-column');left.append(renderLesson(task));
+ const tasks=el('div','card tasks');for(const [i,x]of t.tasks.entries()){const b=button('',()=>{state.task=x.id;labMode='example';feedback=null;hintLevel=0;render();});b.className='taskbutton'+(x.id===task.id?' selected':'');append(b,el('span','task-dot'+(state.completed[x.id]?' complete':''),state.completed[x.id]?'✓':i+1),el('span','',x.title));if(x.id===task.id)b.setAttribute('aria-current','step');tasks.append(b);}left.append(tasks);grid.append(left);
+ const right=el('div'),modes=el('div','lab-modes');modes.setAttribute('role','group');modes.setAttribute('aria-label','Learning steps');for(const [mode,label]of [['example','2 · Try example'],['practice','3 · Your turn']]){const b=button(label,()=>switchLabMode(mode),labMode===mode?'active':'');b.setAttribute('aria-pressed',String(labMode===mode));modes.append(b);}right.append(modes);
+ const detail=el('section','card task-detail'),pad=el('div','card-pad');
+ if(isExample){append(pad,el('div','eyebrow','Example workspace'),el('h2','',LESSONS[task.id].goal),el('p','','Try the steps on the left in the example terminal below. Example work is separate from your practice task and does not earn completion.'),button('Ready for your turn →',()=>switchLabMode('practice'),'primary'));}
+ else{append(pad,el('div','eyebrow',`Your turn · Task ${t.tasks.indexOf(task)+1} of ${t.tasks.length}`),el('h2','',task.title),el('p','',task.goal));const row=el('div','row');append(row,button('Check my work',()=>checkTask(task),'primary'),button('Hint',()=>{hintLevel++;drawHints(task);}),button('Reset task',()=>resetTask(task.id),'quiet'));pad.append(row);const hints=el('div','hint');hints.id='task-hints';pad.append(hints);const fb=el('div');fb.id='task-feedback';fb.setAttribute('aria-live','polite');pad.append(fb);}
+ detail.append(pad);right.append(detail);
+ const shortcuts=el('section','card card-pad command-shortcuts');shortcuts.setAttribute('aria-label','Command reference shortcuts');append(shortcuts,el('h2','','Command reference shortcuts'),el('p','','Select a command to see what it does and its syntax.'));const refs=el('div','reference-strip');for(const c of t.terms)refs.append(button(c,()=>openReference(c)));shortcuts.append(refs);right.append(shortcuts);right.append(terminal(isExample));
+ if(isExample)right.append(button('Reset example',()=>resetTask('example:'+task.id),'quiet'));
+ right.append(el('p','bottomnote',isExample?'Example files are saved in this example workspace. Switch to Your turn for the independent practice problem.':'This terminal changes only the files for this practice task. Your example workspace stays separate.'));grid.append(right);main.append(grid);drawHints(task);if(feedback&&!isExample)drawTaskFeedback(task);
+}
 function drawHints(task){const n=$('#task-hints');if(!n)return;n.replaceChildren();if(hintLevel){n.append(el('span','',task.hint));n.append(button('Show a worked solution',()=>{hintLevel=2;drawHints(task);},'quiet'));}if(hintLevel>=2)n.append(el('pre','',task.solution));}
 function checkTask(task){try{const passed=task.check(shell);if(passed){state.completed[task.id]={at:new Date().toISOString(),hints:hintLevel};feedback={ok:true,text:'Goal achieved. Your result meets the task requirements.'};}else feedback={ok:false,text:'Not complete yet. Check the required location, filename, and contents. For read tasks, display the requested file. Use a hint if you need a starting point.'};keepShell();drawTaskFeedback(task);renderSidebar();}catch{feedback={ok:false,text:'Check your task state, or reset this task and try again.'};drawTaskFeedback(task);}}
-function drawTaskFeedback(task){const n=$('#task-feedback');n.replaceChildren();n.append(el('div','feedback '+(feedback.ok?'success':'error'),feedback.text));if(feedback.ok){const all=TOPICS.flatMap(t=>t.tasks.map(x=>({t,x}))),idx=all.findIndex(x=>x.x.id===task.id),next=all[idx+1];if(next)n.append(button('Next task →',()=>{state.topic=next.t.id;state.task=next.x.id;feedback=null;hintLevel=0;render();},'quiet'));}}
-function resetTask(id){if(!confirm('Reset this practice filesystem and terminal? Your recorded completion stays saved.'))return;delete state.snapshots[id];delete state.transcripts[id];feedback=null;hintLevel=0;render();}
-function terminal(){const box=el('section','terminal');box.setAttribute('aria-label','Practice terminal');const top=el('div','terminal-top'),lights=el('span','lights');lights.innerHTML='<i></i><i></i><i></i>';append(top,lights,el('span','','student@linux-practice'),button('Supported commands',()=>openReference('help')));box.append(top);const log=el('div','terminal-output');log.id='terminal-output';log.setAttribute('role','log');log.setAttribute('aria-label','Terminal command history and output');log.setAttribute('aria-live','off');const entries=state.transcripts[context]||[{text:'Linux command practice\nType help for supported commands.\nYour starting directory is /home/student.\n\n'}];for(const entry of entries)log.append(el('div',entry.kind||'',entry.text));box.append(log);const form=el('form','terminal-form'),prompt=el('label','prompt',promptText());prompt.htmlFor='command-input';prompt.id='terminal-prompt';const input=el('input');input.id='command-input';input.autocomplete='off';input.spellcheck=false;input.setAttribute('aria-label','Enter a Linux command');const run=el('button','','Run');run.type='submit';append(form,prompt,input,run);form.addEventListener('submit',e=>{e.preventDefault();const line=input.value;if(!line.trim())return;input.value='';execute(line);});input.addEventListener('keydown',e=>{if(e.key==='ArrowUp'){e.preventDefault();historyIndex=Math.max(0,historyIndex-1);input.value=shell.history[historyIndex]||'';}else if(e.key==='ArrowDown'){e.preventDefault();historyIndex=Math.min(shell.history.length,historyIndex+1);input.value=shell.history[historyIndex]||'';}else if(e.key==='c'&&e.ctrlKey){e.preventDefault();input.value='';}});box.append(form);setTimeout(()=>{log.scrollTop=log.scrollHeight;},0);return box;}
+function drawTaskFeedback(task){const n=$('#task-feedback');n.replaceChildren();n.append(el('div','feedback '+(feedback.ok?'success':'error'),feedback.text));if(feedback.ok){const all=TOPICS.flatMap(t=>t.tasks.map(x=>({t,x}))),idx=all.findIndex(x=>x.x.id===task.id),next=all[idx+1];if(next)n.append(button('Next task →',()=>{state.topic=next.t.id;state.task=next.x.id;labMode='example';feedback=null;hintLevel=0;render();},'quiet'));}}
+function resetTask(id){if(!confirm(id.startsWith('example:')?'Reset this example workspace?':'Reset this practice filesystem and terminal? Your recorded completion stays saved.'))return;delete state.snapshots[id];delete state.transcripts[id];feedback=null;hintLevel=0;render();}
+function terminal(isExample=false){const box=el('section','terminal');box.setAttribute('aria-label',isExample?'Example terminal':'Practice terminal');const top=el('div','terminal-top'),lights=el('span','lights');lights.innerHTML='<i></i><i></i><i></i>';append(top,lights,el('span','',isExample?'Example terminal · student@linux-practice':'Practice terminal · student@linux-practice'),button('Supported commands',()=>openReference('help')));box.append(top);const log=el('div','terminal-output');log.id='terminal-output';log.setAttribute('role','log');log.setAttribute('aria-label','Terminal command history and output');log.setAttribute('aria-live','off');const entries=state.transcripts[context]||[{text:(isExample?'Example workspace: use the files in examples/.\n':'Linux command practice\n')+'Type help for supported commands.\nYour starting directory is /home/student.\n\n'}];for(const entry of entries)log.append(el('div',entry.kind||'',entry.text));box.append(log);const form=el('form','terminal-form'),prompt=el('label','prompt',promptText());prompt.htmlFor='command-input';prompt.id='terminal-prompt';const input=el('input');input.id='command-input';input.autocomplete='off';input.spellcheck=false;input.setAttribute('aria-label','Enter a Linux command');const run=el('button','','Run');run.type='submit';append(form,prompt,input,run);form.addEventListener('submit',e=>{e.preventDefault();const line=input.value;if(!line.trim())return;input.value='';execute(line);});input.addEventListener('keydown',e=>{if(e.key==='ArrowUp'){e.preventDefault();historyIndex=Math.max(0,historyIndex-1);input.value=shell.history[historyIndex]||'';}else if(e.key==='ArrowDown'){e.preventDefault();historyIndex=Math.min(shell.history.length,historyIndex+1);input.value=shell.history[historyIndex]||'';}else if(e.key==='c'&&e.ctrlKey){e.preventDefault();input.value='';}});box.append(form);setTimeout(()=>{log.scrollTop=log.scrollHeight;},0);return box;}
 function promptText(){return 'student:'+ (shell.cwd.startsWith(HOME)?'~'+shell.cwd.slice(HOME.length):shell.cwd)+'$';}
 function execute(line){if(!state.transcripts[context])state.transcripts[context]=[];const entries=state.transcripts[context];entries.push({kind:'command',text:promptText()+' '+line});const r=shell.run(line);if(r.clear)entries.splice(0,entries.length);else if(r.out)entries.push({kind:r.ok?'':'error',text:r.out});if(entries.length>250)entries.splice(0,entries.length-250);keepShell();historyIndex=shell.history.length;const log=$('#terminal-output');log.replaceChildren(...entries.map(e=>el('div',e.kind||'',e.text)));log.scrollTop=log.scrollHeight;$('#terminal-prompt').textContent=promptText();$('#terminal-announcement').textContent=r.ok?'Command completed.':'Command error: '+r.out;if(r.edit)openEditor(r.edit);}
 function openEditor(edit){const d=$('#editor');$('#editor-path').textContent=edit.path;$('#editor-text').value=edit.text;$('#editor-message').textContent='Practice editor. In the real VM, nano uses keyboard shortcuts.';d.showModal();$('#save-editor').onclick=()=>{try{shell.write(edit.path,$('#editor-text').value);keepShell();d.close();toast('File saved. Use cat to inspect it.');}catch(e){$('#editor-message').textContent=e.message;}};}

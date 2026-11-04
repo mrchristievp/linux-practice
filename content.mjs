@@ -49,6 +49,602 @@ export const TOPICS=[
  task('scriptmode','Set executable permissions','Create an empty practice/run.sh file. Give its owner read/write/execute, its group read/execute, and others no access.','Use mode 750. The .sh extension alone does not set permissions or make this terminal execute scripts.','touch practice/run.sh; chmod 750 practice/run.sh',s=>exists(s,'practice/run.sh')&&s.fs[HOME+'/practice/run.sh'].mode===0o750)
  ]}
 ];
+
+export const LESSONS={
+  "identity": {
+    "title": "Read the terminal prompt",
+    "points": [
+      "The prompt identifies the user, computer, and current folder.",
+      "whoami prints the user; hostname prints the computer name; pwd prints the current folder.",
+      "Type commands after the $ prompt. Do not type the $ itself."
+    ],
+    "goal": "Identify the current user and folder.",
+    "steps": [
+      {
+        "command": "whoami",
+        "why": "Read the username returned by the terminal."
+      },
+      {
+        "command": "pwd",
+        "why": "Read the full path of the current folder."
+      }
+    ]
+  },
+  "help": {
+    "title": "Ask a command for help",
+    "points": [
+      "man takes a command name as its argument.",
+      "A manual explains what the command does and which options it accepts."
+    ],
+    "goal": "Read about pwd, then use it.",
+    "steps": [
+      {
+        "command": "man pwd",
+        "why": "Look up the command before trying it."
+      },
+      {
+        "command": "pwd",
+        "why": "Use the command to display your current folder."
+      }
+    ]
+  },
+  "commandparts": {
+    "title": "Command, option, path",
+    "points": [
+      "A command names the action. An option changes its behavior.",
+      "In ls -l downloads, ls is the command, -l is the option, and downloads is the path."
+    ],
+    "goal": "Inspect downloads using a detailed listing.",
+    "steps": [
+      {
+        "command": "ls downloads",
+        "why": "List just the entry names."
+      },
+      {
+        "command": "ls -l downloads",
+        "why": "Compare the long listing: permissions, owner, size, and name."
+      }
+    ]
+  },
+  "returnhome": {
+    "title": "Return to your home folder",
+    "points": [
+      "cd changes the current directory.",
+      "cd with no argument, or cd ~, returns to your home directory.",
+      "Use pwd to confirm where you ended up."
+    ],
+    "goal": "Visit /etc, then return home.",
+    "steps": [
+      {
+        "command": "cd /etc",
+        "why": "Move to an absolute path outside your home folder."
+      },
+      {
+        "command": "cd ~",
+        "why": "Use ~ as a shortcut to your home folder."
+      },
+      {
+        "command": "pwd",
+        "why": "Verify that you are back in /home/student."
+      }
+    ]
+  },
+  "locate": {
+    "title": "Locate a file, then read it",
+    "points": [
+      "find searches for file paths; cat displays a file’s text.",
+      "After finding a file, pass its full or relative path to cat."
+    ],
+    "goal": "Find agenda.txt in the example folders and read it.",
+    "steps": [
+      {
+        "command": "find examples -name agenda.txt",
+        "why": "Search the example folders for this exact filename."
+      },
+      {
+        "command": "cat examples/club/agenda.txt",
+        "why": "Read the file at the path returned by find."
+      }
+    ]
+  },
+  "relative": {
+    "title": "Navigate with relative paths",
+    "points": [
+      "A relative path starts from your current directory.",
+      "A path can contain several folders separated by /.",
+      "Use pwd to check the resulting full path."
+    ],
+    "goal": "Enter examples/club from your home folder.",
+    "steps": [
+      {
+        "command": "cd examples/club",
+        "why": "Follow two folders using a relative path."
+      },
+      {
+        "command": "pwd",
+        "why": "The full path should end with /examples/club."
+      }
+    ]
+  },
+  "hidden": {
+    "title": "Reveal hidden filenames",
+    "points": [
+      "Names beginning with a dot are normally hidden by ls.",
+      "ls -a includes hidden entries. The dot is part of the filename."
+    ],
+    "goal": "Find and read the hidden tip inside examples.",
+    "steps": [
+      {
+        "command": "ls examples",
+        "why": "Look at the visible entries first."
+      },
+      {
+        "command": "ls -a examples",
+        "why": "Notice the extra .tip.txt entry."
+      },
+      {
+        "command": "cat examples/.tip.txt",
+        "why": "Include the leading dot when reading the file."
+      }
+    ]
+  },
+  "parent": {
+    "title": "Move to the parent folder",
+    "points": [
+      ".. means the parent of your current folder.",
+      ". means the current folder. Neither is a normal filename."
+    ],
+    "goal": "Move from examples/club to examples.",
+    "steps": [
+      {
+        "command": "cd examples/club",
+        "why": "Start two levels below your home folder."
+      },
+      {
+        "command": "cd ..",
+        "why": "Move up exactly one level."
+      },
+      {
+        "command": "pwd",
+        "why": "Check that the path now ends with /examples."
+      }
+    ]
+  },
+  "create": {
+    "title": "Create a folder and a file",
+    "points": [
+      "mkdir creates a folder. touch creates an empty file if it is missing.",
+      "Create the parent folder before creating a file inside it."
+    ],
+    "goal": "Create an example folder containing an empty checklist.",
+    "steps": [
+      {
+        "command": "mkdir examples/project",
+        "why": "Create the parent folder."
+      },
+      {
+        "command": "touch examples/project/checklist.txt",
+        "why": "Create a file inside that folder."
+      },
+      {
+        "command": "ls examples/project",
+        "why": "Verify that the file exists."
+      }
+    ]
+  },
+  "backup": {
+    "title": "Copy while keeping the original",
+    "points": [
+      "cp takes a source path and a destination path.",
+      "A destination can include a new filename. Copying leaves the source in place."
+    ],
+    "goal": "Make a renamed copy of the example club notes.",
+    "steps": [
+      {
+        "command": "mkdir examples/archive",
+        "why": "Create a destination folder."
+      },
+      {
+        "command": "cp examples/club/notes.txt examples/archive/club-copy.txt",
+        "why": "Copy the text and give the copy a new name."
+      },
+      {
+        "command": "ls examples/club; ls examples/archive",
+        "why": "Check that both the original and copy exist."
+      }
+    ]
+  },
+  "move": {
+    "title": "Move and rename with mv",
+    "points": [
+      "mv takes a source and destination, just like cp.",
+      "Moving removes the source entry. A new destination filename also renames it."
+    ],
+    "goal": "Move the example color file into the club folder with a new name.",
+    "steps": [
+      {
+        "command": "mv examples/colors.txt examples/club/swatches.txt",
+        "why": "Move and rename the file in one command."
+      },
+      {
+        "command": "ls examples; ls examples/club",
+        "why": "Check that only the destination contains the moved file."
+      }
+    ]
+  },
+  "cleanup": {
+    "title": "Inspect a copy before deleting it",
+    "points": [
+      "Use cp to make a working copy without changing the original.",
+      "Use cat to inspect it, then rm to remove only the copy."
+    ],
+    "goal": "Create, inspect, and remove a scratch copy of the example agenda.",
+    "steps": [
+      {
+        "command": "cp examples/club/agenda.txt examples/scratch.txt",
+        "why": "Make a temporary working copy."
+      },
+      {
+        "command": "cat examples/scratch.txt",
+        "why": "Confirm that this is the copy you intended to remove."
+      },
+      {
+        "command": "rm examples/scratch.txt",
+        "why": "Remove the scratch copy; the agenda remains in club."
+      }
+    ]
+  },
+  "firstlines": {
+    "title": "Read the beginning of a file",
+    "points": [
+      "head shows the beginning of a file.",
+      "-n chooses the number of lines; without it, head shows ten."
+    ],
+    "goal": "Display the first three lines of the example club notes.",
+    "steps": [
+      {
+        "command": "cat examples/club/notes.txt",
+        "why": "Look at the whole file for comparison."
+      },
+      {
+        "command": "head -n 3 examples/club/notes.txt",
+        "why": "Limit the output to the first three lines."
+      }
+    ]
+  },
+  "lastlines": {
+    "title": "Read the end of a file",
+    "points": [
+      "tail shows the end of a file.",
+      "-n selects how many final lines to display."
+    ],
+    "goal": "Read the last three lines of the example club agenda.",
+    "steps": [
+      {
+        "command": "tail -n 3 examples/club/agenda.txt",
+        "why": "Read from the end instead of the beginning."
+      },
+      {
+        "command": "wc -l examples/club/agenda.txt",
+        "why": "Count the file’s total lines for comparison."
+      }
+    ]
+  },
+  "write": {
+    "title": "Write one line to a file",
+    "points": [
+      "echo prints the text you give it.",
+      "> sends that output into a file, replacing any previous contents.",
+      "Quote text containing spaces so it stays together."
+    ],
+    "goal": "Write a short example reminder and inspect it.",
+    "steps": [
+      {
+        "command": "echo \"Bring your notebook.\" > examples/reminder.txt",
+        "why": "Create a file containing one line."
+      },
+      {
+        "command": "cat examples/reminder.txt",
+        "why": "Check the exact text you saved."
+      }
+    ]
+  },
+  "append": {
+    "title": "Append without erasing",
+    "points": [
+      "> creates or replaces a file’s contents.",
+      ">> adds new output at the end, preserving existing text."
+    ],
+    "goal": "Create an example list containing Red and Blue on separate lines.",
+    "steps": [
+      {
+        "command": "echo Red > examples/list.txt",
+        "why": "Start a new file with the first line."
+      },
+      {
+        "command": "echo Blue >> examples/list.txt",
+        "why": "Append the second line instead of replacing the first."
+      },
+      {
+        "command": "cat examples/list.txt",
+        "why": "Verify that both lines are still present."
+      }
+    ]
+  },
+  "findtxt": {
+    "title": "Find files by name",
+    "points": [
+      "find searches folder paths, not the text inside files.",
+      "-name selects filenames matching a pattern. * means any sequence of characters.",
+      "Quote wildcard patterns so the pattern reaches find as intended."
+    ],
+    "goal": "Find .log files under the example folder.",
+    "steps": [
+      {
+        "command": "find examples -name \"*.log\"",
+        "why": "Search all example subfolders for names ending in .log."
+      }
+    ]
+  },
+  "matching": {
+    "title": "Select and save matching lines",
+    "points": [
+      "grep selects lines containing a pattern.",
+      "Match capitalization exactly unless you use -i.",
+      "Add > and a filename to save the selected lines."
+    ],
+    "goal": "Save the example agenda line containing Tuesday.",
+    "steps": [
+      {
+        "command": "grep Tuesday examples/club/agenda.txt",
+        "why": "Preview the matching line before saving it."
+      },
+      {
+        "command": "grep Tuesday examples/club/agenda.txt > examples/tuesday.txt",
+        "why": "Save that line into a new file."
+      },
+      {
+        "command": "cat examples/tuesday.txt",
+        "why": "Read the saved result."
+      }
+    ]
+  },
+  "case": {
+    "title": "Search regardless of capitalization",
+    "points": [
+      "grep is case sensitive by default.",
+      "-i treats uppercase and lowercase letters as equivalent."
+    ],
+    "goal": "Save every example line containing shell in any capitalization.",
+    "steps": [
+      {
+        "command": "grep shell examples/words.txt",
+        "why": "Notice that this matches only lowercase shell."
+      },
+      {
+        "command": "grep -i shell examples/words.txt > examples/shell-lines.txt",
+        "why": "Include Shell as well as shell and save the result."
+      },
+      {
+        "command": "cat examples/shell-lines.txt",
+        "why": "Verify that both matching lines were saved."
+      }
+    ]
+  },
+  "count": {
+    "title": "Count matching lines",
+    "points": [
+      "grep -c returns a count instead of the matching text.",
+      "The count is matching lines, even if a word occurs twice on one line."
+    ],
+    "goal": "Count example log lines containing CLOSE and save the number.",
+    "steps": [
+      {
+        "command": "grep -n CLOSE examples/visits.log",
+        "why": "Preview the matching lines with their line numbers."
+      },
+      {
+        "command": "grep -c CLOSE examples/visits.log > examples/close-count.txt",
+        "why": "Save just the count, not the log text."
+      },
+      {
+        "command": "cat examples/close-count.txt",
+        "why": "The example file contains one matching line."
+      }
+    ]
+  },
+  "pipeline": {
+    "title": "Connect two filters with a pipe",
+    "points": [
+      "A pipe (|) passes the first command’s output to the next command.",
+      "Two grep filters keep only lines matching both patterns.",
+      "Put a redirect at the end to save the final result."
+    ],
+    "goal": "Save example log entries containing both OPEN and office.",
+    "steps": [
+      {
+        "command": "grep OPEN examples/visits.log | grep office",
+        "why": "Filter by status first, then by location."
+      },
+      {
+        "command": "grep OPEN examples/visits.log | grep office > examples/office-open.txt",
+        "why": "Save only the result of both filters."
+      }
+    ]
+  },
+  "organize": {
+    "title": "Build an organized working folder",
+    "points": [
+      "Break a multi-step goal into smaller changes.",
+      "Create the folder, copy a source file, then add any empty files.",
+      "Check the finished folder with ls."
+    ],
+    "goal": "Make an example meeting folder with a copied agenda and an empty list.",
+    "steps": [
+      {
+        "command": "mkdir examples/meeting",
+        "why": "Create the destination."
+      },
+      {
+        "command": "cp examples/club/agenda.txt examples/meeting/plan.txt",
+        "why": "Copy and rename the agenda."
+      },
+      {
+        "command": "touch examples/meeting/attendees.txt",
+        "why": "Create a separate empty file."
+      },
+      {
+        "command": "ls examples/meeting",
+        "why": "Check the two filenames."
+      }
+    ]
+  },
+  "extract": {
+    "title": "Save part of a file",
+    "points": [
+      "head can select a file’s first lines.",
+      "Redirect the selected output, then use cat to verify the new file."
+    ],
+    "goal": "Save and display the first two example club-note lines.",
+    "steps": [
+      {
+        "command": "head -n 2 examples/club/notes.txt > examples/short-notes.txt",
+        "why": "Create a shorter file without changing the original."
+      },
+      {
+        "command": "cat examples/short-notes.txt",
+        "why": "Verify the saved result, rather than only the source."
+      }
+    ]
+  },
+  "independent": {
+    "title": "Combine familiar skills",
+    "points": [
+      "Plan the result before choosing commands.",
+      "Use mkdir for a destination, cp for an unchanged copy, and grep for selected text.",
+      "Preserve originals when the goal asks for copies."
+    ],
+    "goal": "Create an example handout folder with club notes and only Art agenda lines.",
+    "steps": [
+      {
+        "command": "mkdir examples/handouts",
+        "why": "Prepare the destination folder."
+      },
+      {
+        "command": "cp examples/club/notes.txt examples/handouts/tips.txt",
+        "why": "Copy the notes with a new filename."
+      },
+      {
+        "command": "grep Art examples/club/agenda.txt > examples/handouts/art-days.txt",
+        "why": "Make a second file containing only the selected agenda lines."
+      },
+      {
+        "command": "ls examples/handouts",
+        "why": "Verify that both files are present."
+      }
+    ]
+  },
+  "private": {
+    "title": "Read the three permission groups",
+    "points": [
+      "Permissions describe the owner, group, and others, in that order.",
+      "For each group, read = 4, write = 2, and execute = 1. Add the values.",
+      "chmod changes access; ls -l lets you inspect it."
+    ],
+    "goal": "Give only the owner read access to an example note.",
+    "steps": [
+      {
+        "command": "chmod 400 examples/club/notes.txt",
+        "why": "4 gives the owner read access; both 0 digits remove all other access."
+      },
+      {
+        "command": "ls -l examples/club/notes.txt",
+        "why": "Expect -r-------- for the example file."
+      }
+    ]
+  },
+  "groupread": {
+    "title": "Choose a mode for each group",
+    "points": [
+      "Each digit controls one group: owner, group, then others.",
+      "6 = read + write; 4 = read only; 0 = no access.",
+      "A read-only owner can have a different mode from the group."
+    ],
+    "goal": "Give the example note read access for owner and group only.",
+    "steps": [
+      {
+        "command": "chmod 440 examples/club/notes.txt",
+        "why": "Set owner read, group read, and no access for others."
+      },
+      {
+        "command": "ls -l examples/club/notes.txt",
+        "why": "Expect -r--r----- for the example file."
+      }
+    ]
+  },
+  "readonly": {
+    "title": "Protect a copy from changes",
+    "points": [
+      "Copy first so permission changes apply only to the working copy.",
+      "A mode with no write bit prevents writing through this practice terminal.",
+      "Read and execute are separate permissions."
+    ],
+    "goal": "Make an example agenda copy readable only by its owner.",
+    "steps": [
+      {
+        "command": "cp examples/club/agenda.txt examples/agenda-copy.txt",
+        "why": "Keep the source unchanged."
+      },
+      {
+        "command": "chmod 400 examples/agenda-copy.txt",
+        "why": "Give the owner read access, with no write or execute bits."
+      },
+      {
+        "command": "ls -l examples/agenda-copy.txt",
+        "why": "Inspect the new copy’s mode."
+      }
+    ]
+  },
+  "scriptmode": {
+    "title": "Set the execute bit deliberately",
+    "points": [
+      "Execute = 1. Read + execute = 5; read + write + execute = 7.",
+      "A .sh filename does not itself grant execute permission.",
+      "This practice terminal changes permission bits but does not run scripts."
+    ],
+    "goal": "Create an example script file that only its owner can read and execute.",
+    "steps": [
+      {
+        "command": "touch examples/check.sh",
+        "why": "Create the empty file first."
+      },
+      {
+        "command": "chmod 500 examples/check.sh",
+        "why": "Set owner read/execute and no access for anyone else."
+      },
+      {
+        "command": "ls -l examples/check.sh",
+        "why": "Expect -r-x------ for the example file."
+      }
+    ]
+  }
+};
+export function prepareExampleShell(snapshot){
+ if(snapshot)return prepareShell(snapshot);
+ const s=prepareShell();
+ for(const path of ['examples','examples/club'])s.fs[HOME+'/'+path]={type:'d',mode:0o755,owner:'student'};
+ const files={
+ 'examples/club/agenda.txt':'Monday: Robotics\nTuesday: Art\nWednesday: Robotics\nThursday: Music\nFriday: Art\n',
+ 'examples/club/notes.txt':'Arrive on time.\nBring a notebook.\nWork in pairs.\nSave your changes.\n',
+ 'examples/visits.log':'09:00 OPEN lab\n09:05 CLOSE lab\n09:10 OPEN office\n09:15 OPEN lab\n',
+ 'examples/words.txt':'Shell tools work with text.\nshell commands take arguments.\nRead a file before changing it.\n',
+ 'examples/.tip.txt':'A dot at the beginning hides a filename.\n',
+ 'examples/colors.txt':'orange\npurple\nteal\n'
+ };
+ for(const [path,text]of Object.entries(files))s.fs[HOME+'/'+path]={type:'f',text,mode:0o644,owner:'student'};
+ return s;
+}
+
 export function prepareShell(snapshot){const s=new Shell(snapshot);const original=new Shell();s.initialNotes=original.fs[HOME+'/documents/course/notes.txt'].text;s.initialSchedule=original.fs[HOME+'/documents/course/schedule.txt'].text;return s;}
 const recall=(topic,prompt,answers,explanation)=>({topic,type:'recall',prompt,answers,explanation});
 const command=(topic,prompt,answer,explanation)=>({topic,type:'command',prompt,answer,explanation});
