@@ -16,3 +16,5 @@
 .lesson-next{border-top:1px solid var(--line);padding-top:18px}.lesson-next p{font-size:12px;line-height:1.6}.lesson-next button{font-size:12px}.left-column>.tasks{margin-top:18px}
 .lab-modes{display:flex;gap:8px;margin-bottom:15px}.lab-modes button{flex:1;font-size:13px}.lab-modes button.active{background:#fff0f5;color:var(--pink-dark);border-color:#e91d6380}
 @media(max-width:1150px){.left-column{display:block}.lesson-card{border:1px solid var(--line)}.lesson-card .card-pad{padding:22px}.left-column>.tasks{margin:16px 0 22px}}
+
+.left-column>.tasks{margin:0 0 18px;border:1px solid var(--line)}.tasks-heading{padding:16px 20px;margin:0!important;font-size:15px!important;border-bottom:1px solid var(--line);line-height:1.5}
