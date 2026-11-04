@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {writeFileSync} from 'node:fs';
+import {createProgressPdf,requireReportName,pdfReportText} from './pdf-report.mjs';
+import {buildProgressReport} from './progress.mjs';
+const require=createRequire(import.meta.url);const {jsPDF}=require('./jspdf-4.2.1.umd.min.js');
+for(const name of ['', '   ', '\t\n'])assert.throws(()=>requireReportName(name),/Enter your name/);
+assert.equal(requireReportName('  Zoë  García  '),'Zoë García');
+assert.throws(()=>createProgressPdf('sample',{studentName:'',PdfClass:jsPDF}),/Enter your name/);
+assert.ok(pdfReportText('echo λ').includes('\\u{3bb}'));
+const data={completed:{identity:{at:'2026-11-04T20:00:00Z',hints:0}},snapshots:{},transcripts:{identity:[{kind:'command',text:'student:~$ whoami\nstudent'},{kind:'command',text:'student:~$ hostname\nlinux-practice'},{kind:'command',text:'student:~$ pwd\n/home/student'}]},quizHistory:[{at:'2026-11-04T20:00:00Z',correct:1,total:2,topics:['basics'],mode:'practice',responses:[{topic:'basics',type:'recall',prompt:'Which command prints your username?',answer:'whoami',correct:true},{topic:'basics',type:'command',prompt:'Open the manual for ls.',answer:'',correct:false,revealed:true}]}]};
+const text=buildProgressReport(data,{studentName:'Zoë García',siteVersion:'V6',generatedAt:'2026-11-04T20:00:00Z'});
+const bytes=createProgressPdf(text,{studentName:'Zoë García',siteVersion:'V6',PdfClass:jsPDF});assert.ok(Buffer.from(bytes).subarray(0,5).toString()==='%PDF-');writeFileSync('/private/tmp/linux-practice-pdf-sample.pdf',bytes);
+const long=createProgressPdf(text+'\n'+Array.from({length:180},(_,i)=>'Line '+i+': '+('long-file-path/').repeat(15)).join('\n'),{studentName:'Pagination Test',siteVersion:'V6',PdfClass:jsPDF});writeFileSync('/private/tmp/linux-practice-pdf-long.pdf',long);
+console.log('PDF checks passed: required name, whitespace rejection, accented names, Unicode evidence and long-report generation.');

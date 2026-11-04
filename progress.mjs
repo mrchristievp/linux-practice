@@ -30,7 +30,7 @@ export function buildProgressReport(data,{studentName='',siteVersion='',generate
  function responses(items,hideResults=false){for(const [i,r]of items.entries()){add('',`  ${i+1}. ${r.prompt}`,`     Topic: ${topics.find(t=>t.id===r.topic)?.label||r.topic}`,`     Type: ${{interpret:'Multiple choice',command:'Command entry',recall:'Command name recall'}[r.type]||r.type}`,`     Submitted answer: ${r.answer||'(no answer)'}`,`     Result: ${hideResults?'Feedback available when the set is finished':r.revealed?'Solution viewed (not independently correct)':r.correct?'Correct':'Incorrect / skipped'}`);}}
  for(const [i,set]of history.entries()){add('',`Set ${i+1} - ${date(set.at)}`,`Score: ${set.correct} of ${set.total}`,`Mode: ${set.mode==='quiz'?'Quiz yourself':set.mode==='practice'?'Practice':'Not recorded'}`,`Topics: ${(set.topics||[]).map(id=>topics.find(t=>t.id===id)?.label||id).join(', ')}`);if(Array.isArray(set.responses))responses(set.responses);else add('Detailed answers were not saved for this earlier set.');}
  if(activeQuiz&&!activeQuiz.finished){const set=summarizeQuizSession(activeQuiz);add('','CURRENT QUESTION SET (unfinished)',`Responses submitted: ${set.responses.length} of ${set.total}`);responses(set.responses,activeQuiz.mode==='quiz');}
- add('','END OF REPORT','Save this text file and upload it to your teacher.');return lines.join('\n')+'\n';
+ add('','END OF REPORT','Upload this report to your teacher.');return lines.join('\n')+'\n';
 }
 
 export function validateProgressBackup(data){
