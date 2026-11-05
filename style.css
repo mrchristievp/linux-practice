@@ -24,3 +24,5 @@
 .progress-report-dialog{width:min(900px,94vw)}.progress-report-dialog>p{font-size:13px;line-height:1.6;color:var(--muted)}.report-preview{max-height:45vh;overflow:auto;border:1px solid var(--line);background:#fafaf8;padding:16px;overflow-wrap:anywhere;font-size:12px}.progress-report-dialog>.row{margin-top:16px}
 
 .report-name-error{color:#942446;font-size:13px;line-height:1.5;margin:8px 0}.progress-report-dialog input[aria-invalid=true]{border-color:#ba1048}
+
+.sidebar-bottom .reset-progress{color:#a91c41;border-color:#e4bac5;margin-top:5px}.danger{background:#ba1048;border-color:#ba1048;color:white}.danger:hover{background:#99103c;border-color:#99103c}.reset-progress-dialog{width:min(560px,94vw)}.reset-progress-dialog p{font-size:14px;line-height:1.7;color:var(--muted)}.reset-progress-dialog .row{margin-top:22px;justify-content:flex-end}@media(max-width:760px){.progress-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
