@@ -28,3 +28,5 @@
 .sidebar-bottom .reset-progress{color:#a91c41;border-color:#e4bac5;margin-top:5px}.danger{background:#ba1048;border-color:#ba1048;color:white}.danger:hover{background:#99103c;border-color:#99103c}.reset-progress-dialog{width:min(560px,94vw)}.reset-progress-dialog p{font-size:14px;line-height:1.7;color:var(--muted)}.reset-progress-dialog .row{margin-top:22px;justify-content:flex-end}@media(max-width:760px){.progress-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .command-shortcuts{margin:18px 0 0}
+
+.lab-modes{max-width:520px;margin:0 0 8px}.lab-modes [role=tab]{padding:12px 20px}.lab-mode-description{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 22px}.example-workspace-note{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 12px}
